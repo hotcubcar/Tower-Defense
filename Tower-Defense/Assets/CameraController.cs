@@ -26,19 +26,22 @@ public class CameraController : MonoBehaviour {
             return;
         }
 
-        if (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panBorderThickness)
+        //X 0- 75
+        //Z 0- -80
+
+        if (transform.position.z < -5 && (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panBorderThickness))
         {
             transform.Translate(Vector3.forward * panSpeed * Time.deltaTime, Space.World);
         }
-        if (Input.GetKey("s") || Input.mousePosition.y <=  panBorderThickness)
+        if (transform.position.z > -85 && (Input.GetKey("s") || Input.mousePosition.y <=  panBorderThickness))
         {
             transform.Translate(Vector3.back * panSpeed * Time.deltaTime, Space.World);
         }
-        if (Input.GetKey("d") || Input.mousePosition.x >= Screen.width - panBorderThickness)
+        if (transform.position.x < 75 && (Input.GetKey("d") || Input.mousePosition.x >= Screen.width - panBorderThickness))
         {
             transform.Translate(Vector3.right * panSpeed * Time.deltaTime, Space.World);
         }
-        if (Input.GetKey("a") || Input.mousePosition.x <=  panBorderThickness)
+        if (transform.position.x > 0 && (Input.GetKey("a") || Input.mousePosition.x <=  panBorderThickness))
         {
             transform.Translate(Vector3.left * panSpeed * Time.deltaTime, Space.World);
         }
@@ -51,6 +54,9 @@ public class CameraController : MonoBehaviour {
         pos.y = Mathf.Clamp(pos.y, minY, maxY);
 
         transform.position = pos;
+
+
+        Debug.Log(pos);
 
     }
 }
