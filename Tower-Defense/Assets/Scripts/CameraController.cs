@@ -56,7 +56,7 @@ public class CameraController : MonoBehaviour {
         transform.position = pos;
 
 
-        Debug.Log(pos);
+        //Debug.Log(pos);
 
     }
 }

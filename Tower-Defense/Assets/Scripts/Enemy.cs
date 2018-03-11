@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
 
     public float speed = 10f;
+    public float turnSpeed = 10f;
 
     private Transform target;
     private int wavepointIndex = 0;
@@ -24,7 +25,13 @@ public class Enemy : MonoBehaviour {
             GetNextWaypoint();
         }
 
-	}
+        //Vector3 dir = target.position - transform.position;
+        Quaternion lookRotation = Quaternion.LookRotation(dir);
+        Vector3 rotation = Quaternion.Lerp(gameObject.transform.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
+        gameObject.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+
+
+    }
 
     void GetNextWaypoint()
     {
@@ -36,5 +43,6 @@ public class Enemy : MonoBehaviour {
 
         wavepointIndex++;
         target = Waypoints.points[wavepointIndex];
+
     }
 }
