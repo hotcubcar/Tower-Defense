@@ -10,8 +10,9 @@ public class WaveSpawner : MonoBehaviour
 
     public Transform spawnPoint;
 
-    public float timeBetweenWaves = 5.5f;
+    public float timeBetweenWaves = 10f;
     private float countdown = 2f;
+    public int maxWaveCount = 10;
 
     public Text waveCountdownText;
     public Text waveNumberText;
@@ -34,13 +35,15 @@ public class WaveSpawner : MonoBehaviour
         }
         countdown -= Time.deltaTime;
 
+        countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
+
         waveNumberText.text = "Wave: " + waveIndex;
-        waveCountdownText.text = Mathf.Round(countdown).ToString();
+        waveCountdownText.text = string.Format("{0:00.00}", countdown);
     }
 
     IEnumerator SpawnWave()
     {
-        if (waveIndex < 10)
+        if (waveIndex < maxWaveCount)
         {
             waveIndex++;
         }

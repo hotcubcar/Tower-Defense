@@ -11,7 +11,16 @@ public class Bullet : MonoBehaviour {
     public GameObject impactEffect;
     public string enemyTag = "Enemy";
     public int range = 0;
-
+    private bool isGuided = false;
+    public bool isRocket()
+    {
+        if (range != 0)
+        {
+            return true;
+        }
+        return false;
+    }
+    public int rocketArc = 0;
 
     public void Seek(Transform _target)
     {
@@ -20,61 +29,76 @@ public class Bullet : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+            isGuided = isRocket();        
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (target == null)
+
+        if (isGuided)
         {
-            if (range == 0)
+            transform.rotation = Quaternion.Euler(Vector3.right * -90); //Look Up
+            if (transform.position.y < rocketArc) //Not High Enough?
             {
-                Destroy(gameObject);
+                transform.Translate(Vector3.up * speed * Time.deltaTime, Space.World); //Move Up
                 return;
             }
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-            float shortestDistance = Mathf.Infinity;
-            GameObject nearestEnemy = null;
-            foreach (GameObject enemy in enemies)
-            {
-                float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
-                if (distanceToEnemy < shortestDistance)
-                {
-                    shortestDistance = distanceToEnemy;
-                    nearestEnemy = enemy;
-                }
-            }
-
-            if (nearestEnemy != null && shortestDistance <= range)
-            {
-                target = nearestEnemy.transform;
-            }
-            else
-            {
-                Destroy(gameObject);
-                return;
-            }
-        }
-
-        Vector3 dir = target.position - transform.position;
-        float distanceThisFrame = speed * Time.deltaTime;
-
-        if (dir.magnitude <= distanceThisFrame)
-        {
-            HitTarget();
-            return;
-        }
-        transform.Translate(dir.normalized * distanceThisFrame, Space.World);
-
-        if (range != 0)
-        {
-            Quaternion lookRotation = Quaternion.LookRotation(dir);
-            Vector3 rotation = Quaternion.Lerp(gameObject.transform.rotation, lookRotation, Time.deltaTime * 5).eulerAngles;
-            gameObject.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+            isGuided = false; //High Enough, No More Up
         }
         else
         {
-            transform.LookAt(target);
+
+            if (target == null)
+            {
+                if (!isRocket())
+                {
+                    Destroy(gameObject);
+                    return;
+                }
+                GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+                float shortestDistance = Mathf.Infinity;
+                GameObject nearestEnemy = null;
+                foreach (GameObject enemy in enemies)
+                {
+                    float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+                    if (distanceToEnemy < shortestDistance)
+                    {
+                        shortestDistance = distanceToEnemy;
+                        nearestEnemy = enemy;
+                    }
+                }
+
+                if (nearestEnemy != null && shortestDistance <= range)
+                {
+                    target = nearestEnemy.transform;
+                }
+                else
+                {
+                    Destroy(gameObject);
+                    return;
+                }
+            }
+
+            Vector3 dir = target.position - transform.position;
+            float distanceThisFrame = speed * Time.deltaTime;
+
+            if (dir.magnitude <= distanceThisFrame)
+            {
+                HitTarget();
+                return;
+            }
+            transform.Translate(dir.normalized * distanceThisFrame, Space.World);
+
+            if (isRocket())
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(dir);
+                Vector3 rotation = Quaternion.Lerp(gameObject.transform.rotation, lookRotation, Time.deltaTime * 5).eulerAngles;
+                gameObject.transform.rotation = Quaternion.Euler(rotation);
+            }
+            else
+            {
+                transform.LookAt(target);
+            }
         }
 	}
 
