@@ -9,6 +9,9 @@ public class Bullet : MonoBehaviour {
     public float speed = 70;
     public float explosionRadius = 0f;
     public GameObject impactEffect;
+    public string enemyTag = "Enemy";
+    public int range = 0;
+
 
     public void Seek(Transform _target)
     {
@@ -24,8 +27,33 @@ public class Bullet : MonoBehaviour {
 	void Update () {
         if (target == null)
         {
-            Destroy(gameObject);
-            return;
+            if (range == 0)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+            float shortestDistance = Mathf.Infinity;
+            GameObject nearestEnemy = null;
+            foreach (GameObject enemy in enemies)
+            {
+                float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+                if (distanceToEnemy < shortestDistance)
+                {
+                    shortestDistance = distanceToEnemy;
+                    nearestEnemy = enemy;
+                }
+            }
+
+            if (nearestEnemy != null && shortestDistance <= range)
+            {
+                target = nearestEnemy.transform;
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
         }
 
         Vector3 dir = target.position - transform.position;
@@ -36,11 +64,18 @@ public class Bullet : MonoBehaviour {
             HitTarget();
             return;
         }
-
         transform.Translate(dir.normalized * distanceThisFrame, Space.World);
-        transform.LookAt(target);
 
-
+        if (range != 0)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(dir);
+            Vector3 rotation = Quaternion.Lerp(gameObject.transform.rotation, lookRotation, Time.deltaTime * 5).eulerAngles;
+            gameObject.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+        }
+        else
+        {
+            transform.LookAt(target);
+        }
 	}
 
     void HitTarget()
