@@ -4,23 +4,22 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
-    public float speed = 10f;
+    public float startSpeed = 10f;
+    [HideInInspector]
+    public float speed;
     public float turnSpeed = 10f;
-    public int health = 100;
+    public float health = 100;
 
     public int value = 50;
 
     public GameObject deathEffect;
 
-    private Transform target;
-    private int wavepointIndex = 0;
-
-	// Use this for initialization
-	void Start () {
-        target = Waypoints.points[0];
-	}
+    void Start()
+    {
+        speed = startSpeed;
+    }
 	
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         health -= amount;
         if (health <= 0)
@@ -28,6 +27,12 @@ public class Enemy : MonoBehaviour {
             Die();
         }
     }
+
+    public void Slow(float amount)
+    {
+        speed = startSpeed * (1f - amount);
+    }
+
 
     void Die()
     {
@@ -37,41 +42,6 @@ public class Enemy : MonoBehaviour {
         Destroy(gameObject);
     }
 
-	// Update is called once per frame
-	void Update () {
-        Vector3 dir = target.position - transform.position;
-        transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
 
-        if (Vector3.Distance(transform.position, target.position) <= 0.5f)
-        {
-            GetNextWaypoint();
-        }
-
-        //Vector3 dir = target.position - transform.position;
-        Quaternion lookRotation = Quaternion.LookRotation(dir);
-        Vector3 rotation = Quaternion.Lerp(gameObject.transform.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
-        gameObject.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
-
-
-    }
-
-    void GetNextWaypoint()
-    {
-        if (wavepointIndex >= Waypoints.points.Length - 1)
-        {
-
-            EndPath();
-            return;
-        }
-
-        wavepointIndex++;
-        target = Waypoints.points[wavepointIndex];
-    }
-
-    void EndPath()
-    {
-        PlayerStats.Lives--;
-        Destroy(gameObject);
-    }
 
 }

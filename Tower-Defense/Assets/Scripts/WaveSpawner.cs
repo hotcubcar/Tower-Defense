@@ -7,6 +7,7 @@ public class WaveSpawner : MonoBehaviour
 {
 
     public Transform enemyPrefab;
+    public Transform airplanePrefab;
 
     public Transform spawnPoint;
 
@@ -51,6 +52,7 @@ public class WaveSpawner : MonoBehaviour
         for (int i = 0; i < waveIndex; i++)
         {
             SpawnEnemy();
+            SpawnAirplane();
             yield return new WaitForSeconds(0.5f);
         }
     }
@@ -58,5 +60,10 @@ public class WaveSpawner : MonoBehaviour
     void SpawnEnemy()
     {
         Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+    }
+
+    void SpawnAirplane()
+    {
+        Instantiate(airplanePrefab, spawnPoint.position, spawnPoint.rotation);
     }
 }
