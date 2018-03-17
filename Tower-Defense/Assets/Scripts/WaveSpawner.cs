@@ -8,6 +8,7 @@ public class WaveSpawner : MonoBehaviour
 
     public Transform enemyPrefab;
     public Transform airplanePrefab;
+    public Transform robotPrefab;
 
     public Transform spawnPoint;
 
@@ -44,26 +45,37 @@ public class WaveSpawner : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        if (waveIndex < maxWaveCount)
+        waveIndex++;
+        PlayerStats.rounds++;
+        if (waveIndex % 10 == 0)
         {
-            waveIndex++;
+            SpawnRobot();
         }
-        //waveIndex++;
+
         for (int i = 0; i < waveIndex; i++)
         {
             SpawnEnemy();
-            SpawnAirplane();
+            //SpawnAirplane();
             yield return new WaitForSeconds(0.5f);
         }
     }
 
     void SpawnEnemy()
     {
+        if (waveIndex % 2 == 0)
+        {
+            SpawnAirplane();
+        }
         Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
     }
 
     void SpawnAirplane()
     {
         Instantiate(airplanePrefab, spawnPoint.position, spawnPoint.rotation);
+    }
+
+    void SpawnRobot()
+    {
+        Instantiate(robotPrefab, spawnPoint.position, spawnPoint.rotation);
     }
 }
