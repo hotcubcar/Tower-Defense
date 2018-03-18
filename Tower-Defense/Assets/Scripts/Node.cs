@@ -29,14 +29,16 @@ public class Node : MonoBehaviour {
         {
             return;
         }
-        if (!buildManager.CanBuild)
-        {
-            return;
-        }
+
         
         if (turret != null)
         {
-            Debug.Log("Already Built");
+            buildManager.SelectNode(this);
+            return;
+        }
+
+        if (!buildManager.CanBuild)
+        {
             return;
         }
 
