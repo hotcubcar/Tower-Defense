@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class WaveSpawner : MonoBehaviour
 {
+    public static int EnemiesAlive = 0;
+
+    public Wave[] waves;
 
     public Transform enemyPrefab;
     public Transform airplanePrefab;
@@ -12,7 +15,7 @@ public class WaveSpawner : MonoBehaviour
 
     public Transform spawnPoint;
 
-    public float timeBetweenWaves = 10f;
+    public float timeBetweenWaves = 2f;
     private float countdown = 2f;
     public int maxWaveCount = 10;
 
@@ -30,10 +33,18 @@ public class WaveSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (EnemiesAlive > 0)
+        {
+            return;
+        }
+        
+
         if (countdown <= 0f)
         {
             StartCoroutine(SpawnWave());
             countdown = timeBetweenWaves;
+            return;
         }
         countdown -= Time.deltaTime;
 
@@ -45,37 +56,48 @@ public class WaveSpawner : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        waveIndex++;
         PlayerStats.rounds++;
-        if (waveIndex % 10 == 0)
-        {
-            SpawnRobot();
-        }
+        //if (waveIndex % 10 == 0)
+        //{
+        //    SpawnRobot();
+        //}
 
-        for (int i = 0; i < waveIndex; i++)
+        Wave wave = waves[waveIndex];
+
+
+        for (int i = 0; i < wave.count; i++)
         {
-            SpawnEnemy();
+            SpawnEnemy(wave.enemy);
             //SpawnAirplane();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f / wave.rate);
         }
-    }
+        waveIndex++;
 
-    void SpawnEnemy()
-    {
-        if (waveIndex % 2 == 0)
+        if (waveIndex == waves.Length)
         {
-            SpawnAirplane();
+            //Next Level
+            Debug.Log("Level Won!");
+            this.enabled = false;
         }
-        Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
     }
 
-    void SpawnAirplane()
+    void SpawnEnemy(GameObject enemy)
     {
-        Instantiate(airplanePrefab, spawnPoint.position, spawnPoint.rotation);
+        //if (waveIndex % 2 == 0)
+        //{
+        //    SpawnAirplane();
+        //}
+        Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
+        EnemiesAlive++;
     }
 
-    void SpawnRobot()
-    {
-        Instantiate(robotPrefab, spawnPoint.position, spawnPoint.rotation);
-    }
+    //void SpawnAirplane()
+    //{
+    //    Instantiate(airplanePrefab, spawnPoint.position, spawnPoint.rotation);
+    //}
+
+    //void SpawnRobot()
+    //{
+    //    Instantiate(robotPrefab, spawnPoint.position, spawnPoint.rotation);
+    //}
 }
