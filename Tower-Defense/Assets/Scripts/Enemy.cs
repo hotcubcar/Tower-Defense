@@ -15,7 +15,9 @@ public class Enemy : MonoBehaviour {
     public int value = 50;
 
     [Header("Unity Stuff")]
+    public Canvas EnemyDisplay;
     public Image healthbar;
+    public GameObject mainCamera;
 
     public GameObject deathEffect;
 
@@ -23,6 +25,16 @@ public class Enemy : MonoBehaviour {
     {
         speed = startSpeed;
         health = startHealth;
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+    }
+
+    void Update()
+    {
+        //Quaternion lookRotation = Quaternion.LookRotation(Vector3.forward);
+        //Vector3 rotation = Quaternion.Lerp(EnemyDisplay.transform.rotation, lookRotation,).eulerAngles;
+        //Vector3 lookForward = new Vector3(40, 0, 0);
+        EnemyDisplay.transform.LookAt(mainCamera.transform);
+        //EnemyDisplay.transform.rotation = Quaternion.LookRotation(lookForward);
     }
 	
     public void TakeDamage(float amount)
