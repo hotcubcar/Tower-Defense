@@ -50,7 +50,8 @@ public class WaveSpawner : MonoBehaviour
 
         countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
 
-        waveNumberText.text = "Wave: " + waveIndex;
+        //waveNumberText.text = "Wave: " + waveIndex;
+        waveNumberText.text = "Enemies: " + EnemiesAlive;
         waveCountdownText.text = string.Format("{0:00.00}", countdown);
     }
 
