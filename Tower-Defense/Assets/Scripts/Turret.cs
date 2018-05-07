@@ -13,7 +13,7 @@ public class Turret : MonoBehaviour
 
     [Header("Use Bullets (Default)")]
     public float fireRate = 1f;
-    private float fireCountdown = 0f;
+    private float fireCountdown = 1f;
 
     [Header("Use Laser")]
     public bool useLaser = false;
@@ -30,6 +30,10 @@ public class Turret : MonoBehaviour
 
     public GameObject bulletPrefab;
     public Transform firePoint;
+
+    public bool hasAnimation;
+    public Animator anim;
+    public bool nukeOpen = false;
 
     // Use this for initialization
     void Start()
@@ -72,6 +76,11 @@ public class Turret : MonoBehaviour
             {
                 lineRenderer.enabled = false;
             }
+            if (hasAnimation && nukeOpen)
+            {
+                anim.Play("NukeClose");
+                nukeOpen = false;
+            }
             return;
         }
 
@@ -83,6 +92,18 @@ public class Turret : MonoBehaviour
         }
         else
         {
+            //Debug.Log(fireCountdown);
+            if (hasAnimation && fireCountdown <=8 && fireCountdown > 1 && nukeOpen)
+            {
+                anim.Play("NukeClose");
+                nukeOpen = false;
+            }
+            if (hasAnimation && fireCountdown <= 1 && !nukeOpen)
+            {
+                nukeOpen = true;
+                anim.Play("NukeOpen");
+            }
+
             if (fireCountdown <= 0)
             {
                 Shoot();
@@ -90,7 +111,6 @@ public class Turret : MonoBehaviour
             }
             fireCountdown -= Time.deltaTime;
         }
-
     }
 
     void LockOnTarget()
