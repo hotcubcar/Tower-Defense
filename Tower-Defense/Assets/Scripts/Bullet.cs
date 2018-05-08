@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour {
+public class Bullet : MonoBehaviour
+{
 
     private Transform target;
 
@@ -13,7 +14,9 @@ public class Bullet : MonoBehaviour {
     public string enemyTag = "Enemy";
     public int range = 0;
     private bool isGuided = false;
-    public bool isRocket()
+    public Rigidbody rb;
+
+    public bool IsRocket()
     {
         if (range != 0)
         {
@@ -28,30 +31,35 @@ public class Bullet : MonoBehaviour {
         target = _target;
     }
 
-	// Use this for initialization
-	void Start () {
-            isGuided = isRocket();        
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    // Use this for initialization
+    void Start()
+    {
+        isGuided = IsRocket();
+        rb = GetComponent<Rigidbody>();
+        //rb.AddRelativeForce(Vector3.up * 1000);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
 
         if (isGuided)
         {
-            transform.rotation = Quaternion.Euler(Vector3.right * -90); //Look Up
+            //transform.rotation = Quaternion.Euler(Vector3.up); //Look Up
             if (transform.position.y < rocketArc) //Not High Enough?
             {
-                transform.Translate(Vector3.up * speed * Time.deltaTime, Space.World); //Move Up
+                rb.AddRelativeForce(Vector3.forward * 15);
+
+                //transform.Translate(Vector3.up * speed * Time.deltaTime, Space.World); //Move Up
                 return;
             }
             isGuided = false; //High Enough, No More Up
         }
         else
         {
-
             if (target == null)
             {
-                if (!isRocket())
+                if (!IsRocket())
                 {
                     Destroy(gameObject);
                     return;
@@ -75,7 +83,7 @@ public class Bullet : MonoBehaviour {
                 }
                 else
                 {
-                    Destroy(gameObject);
+                    HitTarget();
                     return;
                 }
             }
@@ -88,12 +96,20 @@ public class Bullet : MonoBehaviour {
                 HitTarget();
                 return;
             }
-            transform.Translate(dir.normalized * distanceThisFrame, Space.World);
 
-            if (isRocket())
+            //if (!IsRocket())
+            //{
+                transform.Translate(dir.normalized * distanceThisFrame, Space.World);
+            //}
+            //else if (IsRocket())
+            //{
+            //    rb.AddRelativeForce(Vector3.forward  * 5);
+            //}
+
+            if (IsRocket())
             {
                 Quaternion lookRotation = Quaternion.LookRotation(dir);
-                Vector3 rotation = Quaternion.Lerp(gameObject.transform.rotation, lookRotation, Time.deltaTime * 5).eulerAngles;
+                Vector3 rotation = Quaternion.Lerp(gameObject.transform.rotation, lookRotation, Time.deltaTime * 2).eulerAngles;
                 gameObject.transform.rotation = Quaternion.Euler(rotation);
             }
             else
@@ -101,7 +117,7 @@ public class Bullet : MonoBehaviour {
                 transform.LookAt(target);
             }
         }
-	}
+    }
 
     void HitTarget()
     {

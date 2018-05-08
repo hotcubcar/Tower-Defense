@@ -93,12 +93,12 @@ public class Turret : MonoBehaviour
         else
         {
             //Debug.Log(fireCountdown);
-            if (hasAnimation && fireCountdown <=8 && fireCountdown > 1 && nukeOpen)
+            if (hasAnimation && fireCountdown <=7 && fireCountdown > 1 && nukeOpen)
             {
                 anim.Play("NukeClose");
                 nukeOpen = false;
             }
-            if (hasAnimation && fireCountdown <= 1 && !nukeOpen)
+            if (hasAnimation && fireCountdown <= 0 && !nukeOpen)
             {
                 nukeOpen = true;
                 anim.Play("NukeOpen");
