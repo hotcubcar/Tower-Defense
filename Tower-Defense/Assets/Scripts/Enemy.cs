@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour {
 
     public float startSpeed = 10f;
     [HideInInspector]
-    public float speed;
-    public float turnSpeed = 10f;
     private float health = 100;
     public float startHealth;
 
@@ -18,23 +17,28 @@ public class Enemy : MonoBehaviour {
     public Canvas EnemyDisplay;
     public Image healthbar;
     public GameObject mainCamera;
+    public NavMeshAgent agent;
+    public GameObject end;
 
     public GameObject deathEffect;
 
     void Start()
     {
-        speed = startSpeed;
+        agent.speed = startSpeed;
         health = startHealth;
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        end = GameObject.FindGameObjectWithTag("Finish");
+        agent.SetDestination(end.transform.position);
     }
 
     void Update()
     {
-        //Quaternion lookRotation = Quaternion.LookRotation(Vector3.forward);
-        //Vector3 rotation = Quaternion.Lerp(EnemyDisplay.transform.rotation, lookRotation,).eulerAngles;
-        //Vector3 lookForward = new Vector3(40, 0, 0);
         EnemyDisplay.transform.LookAt(mainCamera.transform);
-        //EnemyDisplay.transform.rotation = Quaternion.LookRotation(lookForward);
+        if (agent.remainingDistance == 0f && !agent.pathPending)
+        {
+            EndPath();
+        }
+        agent.speed = startSpeed;
     }
 	
     public void TakeDamage(float amount)
@@ -49,7 +53,14 @@ public class Enemy : MonoBehaviour {
 
     public void Slow(float amount)
     {
-        speed = startSpeed * (1f - amount);
+        agent.speed = startSpeed * (1f - amount);
+    }
+
+    void EndPath()
+    {
+        PlayerStats.Lives--;
+        WaveSpawner.EnemiesAlive--;
+        Destroy(gameObject);
     }
 
 

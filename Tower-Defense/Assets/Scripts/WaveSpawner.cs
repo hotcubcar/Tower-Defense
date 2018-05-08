@@ -9,7 +9,7 @@ public class WaveSpawner : MonoBehaviour
 
     public Wave[] waves;
 
-    public Transform enemyPrefab;
+    public Transform tankPrefab;
     public Transform airplanePrefab;
     public Transform robotPrefab;
 
@@ -33,12 +33,10 @@ public class WaveSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (EnemiesAlive > 0)
         {
             return;
-        }
-        
+        }        
 
         if (countdown <= 0f)
         {
@@ -46,8 +44,8 @@ public class WaveSpawner : MonoBehaviour
             countdown = timeBetweenWaves;
             return;
         }
-        countdown -= Time.deltaTime;
 
+        countdown -= Time.deltaTime;
         countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
 
         //waveNumberText.text = "Wave: " + waveIndex;
@@ -58,13 +56,7 @@ public class WaveSpawner : MonoBehaviour
     IEnumerator SpawnWave()
     {
         PlayerStats.rounds++;
-        //if (waveIndex % 10 == 0)
-        //{
-        //    SpawnRobot();
-        //}
-
         Wave wave = waves[waveIndex];
-
 
         for (int i = 0; i < wave.count; i++)
         {
@@ -84,21 +76,7 @@ public class WaveSpawner : MonoBehaviour
 
     void SpawnEnemy(GameObject enemy)
     {
-        //if (waveIndex % 2 == 0)
-        //{
-        //    SpawnAirplane();
-        //}
         Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
         EnemiesAlive++;
     }
-
-    //void SpawnAirplane()
-    //{
-    //    Instantiate(airplanePrefab, spawnPoint.position, spawnPoint.rotation);
-    //}
-
-    //void SpawnRobot()
-    //{
-    //    Instantiate(robotPrefab, spawnPoint.position, spawnPoint.rotation);
-    //}
 }
