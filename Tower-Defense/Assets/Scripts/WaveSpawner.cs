@@ -33,10 +33,18 @@ public class WaveSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        waveNumberText.text = "Enemies: " + EnemiesAlive;
         if (EnemiesAlive > 0)
         {
             return;
-        }        
+        }
+
+        if (waveIndex == waves.Length)
+        {
+            //Next Level
+            Debug.Log("Level Won!");
+            this.enabled = false;
+        }
 
         if (countdown <= 0f)
         {
@@ -49,7 +57,6 @@ public class WaveSpawner : MonoBehaviour
         countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
 
         //waveNumberText.text = "Wave: " + waveIndex;
-        waveNumberText.text = "Enemies: " + EnemiesAlive;
         waveCountdownText.text = string.Format("{0:00.00}", countdown);
     }
 
@@ -65,13 +72,6 @@ public class WaveSpawner : MonoBehaviour
             yield return new WaitForSeconds(1f / wave.rate);
         }
         waveIndex++;
-
-        if (waveIndex == waves.Length)
-        {
-            //Next Level
-            Debug.Log("Level Won!");
-            this.enabled = false;
-        }
     }
 
     void SpawnEnemy(GameObject enemy)
