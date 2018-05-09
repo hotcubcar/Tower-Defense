@@ -31,7 +31,15 @@ public class LevelGenerator : MonoBehaviour
         //GenerateLevel();
         GeneratePath();
         surface.BuildNavMesh();
+        //GameObject testAI = 
         Instantiate(player, startpos, Quaternion.identity);
+        //NavMeshAgent agent = testAI.GetComponent<NavMeshAgent>();
+        //agent.SetDestination(pathHistory[pathHistory.Count  - 1]);
+        //while (agent.pathPending)
+        //{
+                //Need to move this to first run of Update or something
+        //}
+        //Debug.Log(agent.remainingDistance);
     }
 
     void GeneratePath()
@@ -110,30 +118,4 @@ public class LevelGenerator : MonoBehaviour
 
         return pos += dir * 2;
     }
-
-    //void GenerateLevel()
-    //{
-    //    for (int x = 0; x < width; x++)
-    //    {
-    //        for (int y = 0; y < height; y++)
-    //        {
-    //            if (Random.value > 0.7f)
-    //            {
-    //                //spawn obstacle
-    //                Vector3 pos = new Vector3((x * wallSize) + offset, 1f, (y * wallSize) + offset);
-    //                Instantiate(wall, pos, Quaternion.identity, transform);
-    //            }
-    //            else if (!playerSpawned)
-    //            {
-    //                Vector3 pos = new Vector3((x * wallSize) + offset, 1.25f, (y * wallSize) + offset);
-    //                Instantiate(player, pos, Quaternion.identity);
-    //                playerSpawned = true;
-    //            }
-
-
-
-
-    //        }
-    //    }
-    //}
 }
