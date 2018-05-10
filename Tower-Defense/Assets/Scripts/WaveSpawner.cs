@@ -13,6 +13,8 @@ public class WaveSpawner : MonoBehaviour
     public Transform airplanePrefab;
     public Transform robotPrefab;
 
+    public GameObject[] spawnPoints;
+    public int currentSpawnPoint = 0;
     public Transform spawnPoint;
 
     public float timeBetweenWaves = 2f;
@@ -27,7 +29,8 @@ public class WaveSpawner : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        spawnPoints = GameObject.FindGameObjectsWithTag("Start");
+        spawnPoint = spawnPoints[0].transform;
     }
 
     // Update is called once per frame
@@ -76,7 +79,21 @@ public class WaveSpawner : MonoBehaviour
 
     void SpawnEnemy(GameObject enemy)
     {
+        NextSpawnPoint();
         Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
         EnemiesAlive++;
+    }
+
+    void NextSpawnPoint()
+    {
+        if (spawnPoints.Length > 1)
+        {
+            spawnPoint = spawnPoints[currentSpawnPoint].transform;
+            currentSpawnPoint++;
+            if (currentSpawnPoint > spawnPoints.Length)
+            {
+                currentSpawnPoint = 0;
+            }
+        }
     }
 }
