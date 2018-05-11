@@ -90,7 +90,7 @@ public class WaveSpawner : MonoBehaviour
         {
             spawnPoint = spawnPoints[currentSpawnPoint].transform;
             currentSpawnPoint++;
-            if (currentSpawnPoint > spawnPoints.Length)
+            if (currentSpawnPoint >= spawnPoints.Length)
             {
                 currentSpawnPoint = 0;
             }

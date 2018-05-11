@@ -6,6 +6,7 @@ public class CameraController : MonoBehaviour {
 
     public float panSpeed = 30f;
     public float panBorderThickness = 10f;
+    public bool panEnabled;
     public float scrollSpeed = 5f;
     public float minY = 10f;
     public float maxY = 80f;
@@ -23,19 +24,19 @@ public class CameraController : MonoBehaviour {
         //X 0- 75
         //Z 0- -80
 
-        if (transform.position.z < -5 && (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panBorderThickness))
+        if (transform.position.z < -5 && (Input.GetKey("w") || (Input.mousePosition.y >= Screen.height - panBorderThickness) && panEnabled))
         {
             transform.Translate(Vector3.forward * panSpeed * Time.deltaTime, Space.World);
         }
-        if (transform.position.z > -85 && (Input.GetKey("s") || Input.mousePosition.y <=  panBorderThickness))
+        if (transform.position.z > -85 && (Input.GetKey("s") || (Input.mousePosition.y <=  panBorderThickness) && panEnabled))
         {
             transform.Translate(Vector3.back * panSpeed * Time.deltaTime, Space.World);
         }
-        if (transform.position.x < 75 && (Input.GetKey("d") || Input.mousePosition.x >= Screen.width - panBorderThickness))
+        if (transform.position.x < 75 && (Input.GetKey("d") || (Input.mousePosition.x >= Screen.width - panBorderThickness) && panEnabled))
         {
             transform.Translate(Vector3.right * panSpeed * Time.deltaTime, Space.World);
         }
-        if (transform.position.x > 0 && (Input.GetKey("a") || Input.mousePosition.x <=  panBorderThickness))
+        if (transform.position.x > 0 && (Input.GetKey("a") || (Input.mousePosition.x <=  panBorderThickness) && panEnabled))
         {
             transform.Translate(Vector3.left * panSpeed * Time.deltaTime, Space.World);
         }
