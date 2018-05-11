@@ -149,8 +149,12 @@ public class Bullet : MonoBehaviour
     {
         //Debug.Log("Destroy check on " + enemy.name);
         //enemy = enemy.parent.parent;
-
         Enemy e = enemy.GetComponent<Enemy>();
+        if (e == null)
+        {
+            enemy.GetComponent<PreviewLevel>().TakeDamage(damage);
+        }
+
 
         if (e != null)
         {
