@@ -43,7 +43,7 @@ public class PreviewLevel : MonoBehaviour {
 
     public void TakeDamage(float amount)
     {
-        Debug.Log("Take " + amount + " Damage");
+        //Debug.Log("Take " + amount + " Damage");
         health -= amount;
         healthbar.fillAmount = health / startHealth;
         if (health <= 0)
