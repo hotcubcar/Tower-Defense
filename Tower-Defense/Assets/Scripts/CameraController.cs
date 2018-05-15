@@ -10,6 +10,8 @@ public class CameraController : MonoBehaviour {
     public float scrollSpeed = 5f;
     public float minY = 10f;
     public float maxY = 80f;
+    public float rotMinX = 0f;
+    public float rotMaxX = 69f;
 
 	
 	// Update is called once per frame
@@ -44,8 +46,13 @@ public class CameraController : MonoBehaviour {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
         Vector3 pos = transform.position;
-
+        //Vector3 turnRotation = Quaternion.Euler((scroll * 625 * Time.deltaTime), 0f, 0f).eulerAngles;
+        transform.Rotate(Vector3.left, scroll * 625 * Time.deltaTime);
+        //Debug.Log(transform.rotation);
+        transform.rotation = new Quaternion(Mathf.Clamp(transform.rotation.x, 0.2419219f, 0.5664063f), 0f, 0f,transform.rotation.w);
+        //transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles - turnRotation);
         pos.y -= scroll * 200 * scrollSpeed * Time.deltaTime;
+        //transform.
         pos.y = Mathf.Clamp(pos.y, minY, maxY);
 
         transform.position = pos;
